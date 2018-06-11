@@ -16,6 +16,7 @@
 #include "Modes.h"
 #include "Commands.h"
 
+#define 	delay_between_measurement	5 //s
 /**************************************************
  *  Globals
 **************************************************/
