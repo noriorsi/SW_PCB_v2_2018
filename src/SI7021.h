@@ -34,7 +34,6 @@
 
 void InitSI7021();
 void SI7021_Measure(uint32_t *rhData, int32_t *tData);
-//void DisplayHumData();
-//void DisplayTempData();
+
 
 #endif /* SRC_SI7021_H_ */

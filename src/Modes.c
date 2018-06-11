@@ -9,8 +9,8 @@ unsigned data1 = 0;
 int counter = 0;
 unsigned inPowerSaving = true;
 
-int32_t ff[PARAMETRIC_MEASUREMENT_STORE_SIZE], humData[PARAMETRIC_MEASUREMENT_STORE_SIZE], tData[PARAMETRIC_MEASUREMENT_STORE_SIZE];
-int32_t f0[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f1[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f2[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f3[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f4[PARAMETRIC_MEASUREMENT_STORE_SIZE];
+//int32_t ff[PARAMETRIC_MEASUREMENT_STORE_SIZE], humData[PARAMETRIC_MEASUREMENT_STORE_SIZE], tData[PARAMETRIC_MEASUREMENT_STORE_SIZE];
+//int32_t f0[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f1[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f2[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f3[PARAMETRIC_MEASUREMENT_STORE_SIZE],  f4[PARAMETRIC_MEASUREMENT_STORE_SIZE];
 void EnterPowerSaving(){
 	SetGPIO(MCULED1_PORT, MCULED1_PIN, 0);
 	SetGPIO(MCULED2_PORT, MCULED2_PIN, 0);
@@ -150,26 +150,27 @@ void Measure_multipleFSR (int n, int period){
 
 		for(int i=0;i<n;++i){
 
-			 f0[i] = GetADCvalue_Force0();
-			 f1[i] = GetADCvalue_Force1();
-			 f2[i] = GetADCvalue_Force2();
-			 f3[i] = GetADCvalue_Force3();
-			 f4[i] = GetADCvalue_Force4();
+			uint32_t f0 = GetADCvalue_Force0();
+			uint32_t f1 = GetADCvalue_Force1();
+			uint32_t f2 = GetADCvalue_Force2();
+			uint32_t f3 = GetADCvalue_Force3();
+			uint32_t f4 = GetADCvalue_Force4();
 
 			SI7021_Measure(&HumData, &TData);
-			humData[i]=HumData;
-			tData[i]=TData;
+			// they were arrays once
+			uint32_t humData =HumData;
+			uint32_t tData=TData;
 			time_ms = getTime()-start_time;
 					//BatteryVoltage = BatteryADCMeasurement();
 
 			// Writing sensors datas into flash
-					WriteToFlash((uint32_t)f0[i]);
-					WriteToFlash((uint32_t)f1[i]);
-					WriteToFlash((uint32_t)f2[i]);
-					WriteToFlash((uint32_t)f3[i]);
-					WriteToFlash((uint32_t)f4[i]);
-					WriteToFlash((uint32_t)humData[i]);
-					WriteToFlash((uint32_t)tData[i]);
+					WriteToFlash((uint32_t)f0);
+					WriteToFlash((uint32_t)f1);
+					WriteToFlash((uint32_t)f2);
+					WriteToFlash((uint32_t)f3);
+					WriteToFlash((uint32_t)f4);
+					WriteToFlash((uint32_t)humData);
+					WriteToFlash((uint32_t)tData);
 					//WriteToFlash((uint32_t)time_ms);
 					//WriteToFlash((uint32_t) BatteryVoltage);
 					//Delay(1);
@@ -256,17 +257,17 @@ void Measure(int n, int period){
 	uint32_t start_time = getTime();
 
 		for(int i=0;i<n;++i){
-			ff[i] = GetADCvalue();
+			uint32_t ff = GetADCvalue_Force0();
 			SI7021_Measure(&HumData, &TData);
-			humData[i]=HumData;
-			tData[i]=TData;
+			uint32_t humData=HumData;
+			uint32_t tData=TData;
 			time_ms = getTime()-start_time;
 					//BatteryVoltage = BatteryADCMeasurement();
-					WriteToFlash((uint32_t)ff[i]);
+					WriteToFlash((uint32_t)ff);
 					//WriteToFlash((uint32_t)ff[i]);
 					//WriteToFlash((uint32_t)ff[i]);
-					WriteToFlash((uint32_t)humData[i]);
-					WriteToFlash((uint32_t)tData[i]);
+					WriteToFlash((uint32_t)humData);
+					WriteToFlash((uint32_t)tData);
 					//WriteToFlash((uint32_t)time_ms);
 					//WriteToFlash((uint32_t) BatteryVoltage);
 					//Delay(1);
@@ -330,87 +331,6 @@ void Measure(int n, int period){
 
 
 
-// works as vibration shaker- same function-
-// now it works
-//sends all the data-but not the right format. it should be changed.
-// not used, just a trial
-void SendAndSaveDatas(int n,int period){
 
 
-
-		EraseAllPages();
-		SetGPIO(MCULED2_PORT, MCULED2_PIN, 1);
-
-		uint32_t time_ms, ff, Volt, force, hgmm, humData, tData;
-
-		uint32_t start_time = getTime(); //We started the masurement at this point
-
-		for(int i=0; i<n ; i++){
-			SI7021_Measure(&humData, &tData);
-			ff = GetADCvalue();
-			/*Volt = (ADC_to_Voltage(ff));
-			force = (Voltage_to_force(Volt));
-			hgmm  = 133.3222365 * force;
-			hgmm = hgmm / 38.0;*/
-
-			time_ms = getTime()-start_time;
-
-			WriteToFlash((uint32_t)ff);
-			//WriteToFlash((uint32_t)hgmm);
-			WriteToFlash((uint32_t)humData);
-			WriteToFlash((uint32_t)tData);
-			WriteToFlash((uint32_t)time_ms);
-			/*if (WriteToFlash((uint32_t)time_ms)==1){
-				SetGPIO(MCULED3_PORT, MCULED3_PIN, 1);
-			}*/
-			//WriteToFlash((uint32_t) BatteryVoltage);
-			Delay(2); //this delay is important, see ADXL362 ODR
-
-		}
-
-		UpdateLastDataInFlash();
-
-					RFDuino_GiveIT();
-					InitRFduinoUART();
-					SendEmpty(5);
-
-					send_string("------\n");
-
-
-		for(uint32_t i=FLASH_START_ADDRESS; i<(FLASH_START_ADDRESS+(4*n*4)); i+=16){
-
-
-
-						uint32_t* address;
-						uint32_t readValue;
-
-						address 	= (uint32_t*)(i);
-						readValue 	= ReadFromFlash(address);
-						send_int((int16_t)readValue);
-
-						address 	= (uint32_t*)(4+i);
-						readValue 	= ReadFromFlash(address);
-						send_int((int16_t)readValue);
-
-						address 	= (uint32_t*)(8+i);
-						readValue 	= ReadFromFlash(address);
-						send_int((int16_t)readValue);
-
-						address 	= (uint32_t*)(12+i);
-						readValue 	= ReadFromFlash(address);
-						send_int((int16_t)readValue);
-
-		}
-
-					send_string("Last data address:\n");
-					send_int(ReadFromFlash((uint32_t*)ADDRESS_OF_LAST_DATA_ADDRESS));
-					//SendEmpty(5);
-					SendDate();
-
-					SendEmpty(5);
-
-					SetGPIO(MCULED2_PORT, MCULED2_PIN, 0);
-					EnterPowerSaving();
-
-}
 

@@ -1,9 +1,4 @@
-/*
- * Commands.h
- *
- *  Created on: 2017. aug. 21.
- *      Author: szmik_000
- */
+
 
 #ifndef SRC_COMMANDS_H_
 #define SRC_COMMANDS_H_

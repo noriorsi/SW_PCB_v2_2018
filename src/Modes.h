@@ -30,7 +30,7 @@ void PowerSavingModeNotification(unsigned mode);
 void ContinousMeasurement();
 void ContinousMeasurement_for5fsr();
 void Measure_multipleFSR (int n, int period);
-void SendAndSaveDatas(int n, int period);
+
 //void SendAndSaveDatasPeriod(int n, int period);
 void readADConly();
 void Measure(int n, int period);
@@ -48,6 +48,6 @@ double forceing(uint32_t f);
 #define MODE2		2
 #define MODE3		3
 
-#define PARAMETRIC_MEASUREMENT_STORE_SIZE	100
+#define PARAMETRIC_MEASUREMENT_STORE_SIZE	10
 
 #endif /* SRC_MODES_H_ */

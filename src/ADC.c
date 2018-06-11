@@ -39,7 +39,6 @@ uint32_t GetADCvalue_Force0(void) {
 	ADC_Start(ADC0, adcStartScan);
 
 	while (ADC0->STATUS & ADC_STATUS_SCANACT) ;
-	//Get ADC result (FSR adc result)
 	return ADC_DataScanGet(ADC0);
 
 }
@@ -53,7 +52,6 @@ uint32_t GetADCvalue_Force1(void) {
 	ADC_Start(ADC0, adcStartScan);
 
 	while (ADC0->STATUS & ADC_STATUS_SCANACT) ;
-	//Get ADC result (FSR adc result)
 	return ADC_DataScanGet(ADC0);
 
 }
