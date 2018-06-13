@@ -13,7 +13,7 @@
  *********************************************************************************************************************/
 
 RTC_time_struct time = {0,0,0};
-RTC_date_struct date = {2017,11,13,9,45}; //the dafult value
+RTC_date_struct date = {2017,11,13,9,24}; //the dafult value
 EE_Variable_TypeDef var_year, var_month, var_day, var_hour, var_minute;
 
 
@@ -30,19 +30,19 @@ static void ReadDateFromEEPROM(){
 	//These are magic numbers that I found in the Flash memory.
 	//Using the random numbers in flash is only needed when you want to change the date to the default value upon reset
 	EE_Read(&var_year, &readValue);
-	if(readValue!=0) date.year = readValue;
+		if(readValue!=0) date.year = readValue;
 
-	EE_Read(&var_month, &readValue);
-	if(readValue!=0) date.month = readValue;
+		EE_Read(&var_month, &readValue);
+		if(readValue!=1) date.month = readValue;
 
-	EE_Read(&var_day, &readValue);
-	if(readValue!=0) date.day = readValue;
+		EE_Read(&var_day, &readValue);
+		if(readValue!=1) date.day = readValue;
 
-	EE_Read(&var_hour, &readValue);
-	if(readValue!=0) date.hour = readValue;
+		EE_Read(&var_hour, &readValue);
+		if(readValue!=22) date.hour = readValue;
 
-	EE_Read(&var_minute, &readValue);
-	if(readValue!=0) date.minute = readValue;
+		EE_Read(&var_minute, &readValue);
+		if(readValue!=23) date.minute = readValue;
 }
 
 
@@ -77,7 +77,7 @@ static void InitDate(){
 
 	//Updates the values in memory
 	UpdateDateInEEPROM();
-	SetGPIO(MCULED3_PORT, MCULED3_PIN, 1);
+	//SetGPIO(MCULED3_PORT, MCULED3_PIN, 1);
 }
 
 /*************************************************************
@@ -221,11 +221,13 @@ RTC_time_struct getTimeStructRTC(){
  * Returns true if the given seconds has elapsed
  *************************************************************/
 unsigned didElapseGivenSeconds(int seconds, RTC_time_struct previous_time ){
-	unsigned long current_time_s 	= time.hours*24*60 + time.minutes*60 + time.seconds;
-	unsigned long previous_time_s	= previous_time.hours*24*60 + previous_time.minutes*60 + previous_time.seconds;
+	if(seconds==0) return false; //If 0 second should've been elapsed return
+		if(previous_time.seconds == -1) return true; //When entering this mode start the measurement immediately
+		unsigned long current_time_s 	= time.hours*24*60 + time.minutes*60 + time.seconds;
+		unsigned long previous_time_s	= previous_time.hours*24*60 + previous_time.minutes*60 + previous_time.seconds;
 
-	if(current_time_s >= (previous_time_s+seconds))return true;
-	else return false;
+		if(current_time_s >= (previous_time_s+seconds))return true;
+		else return false;
 }
 
 

@@ -46,21 +46,18 @@ state_enum No_Event_Handler(void){
 			EnterPowerSaving();
 			break;
 		}
+		case WAITING_FOR_COMMAND_STATE:{
+					break;
+				}
 		case MODE1_STATE:{
 			ContinousMeasurement_for5fsr();
 			//GPIO_IntClear(RX_PIN_INT_MASK);									//enable RFDuino IT or else we won't be able to stop this state
 			//GPIO_IntEnable(RX_PIN_INT_MASK);
 			//EnterEM3();
-
+			EnterPowerSaving();
 									break;
 
 						}
-
-
-		case WAITING_FOR_COMMAND_STATE:{
-			break;
-		}
-
 
 		case MODE2_STATE:{
 			//param_period_number=10000;
@@ -156,6 +153,7 @@ state_enum StartM1_Event_Handler(void){
  *************************************************************/
 state_enum StartM2_Event_Handler(void){
 	MODE2_active = true;
+	entered_parametric_timestamp.seconds = -1;
 	event = NO_EVENT;
 	return MODE2_STATE;
 }
@@ -236,7 +234,7 @@ state_enum Timeout_Event_Handler(void){
 
 	event = NO_EVENT;
 
-	if(PARAMETRIC_active) 	return PARAMETRIC_MEASUREMENT_STATE;
+	//if(PARAMETRIC_active) 	return PARAMETRIC_MEASUREMENT_STATE;
 	if(MODE2_active)		return MODE2_STATE;
 
 	return IDLE_STATE;

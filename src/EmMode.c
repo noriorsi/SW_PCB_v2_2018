@@ -111,6 +111,17 @@ static void EnableClocks(){
  * 				 FUNCTIONS
  *******************************************************************************************/
 
+
+
+
+
+
+
+
+
+
+
+
 /***************************************************************************//**
  * Enter EM0
  ******************************************************************************/
@@ -118,6 +129,8 @@ void em_EM0_Hfxo(void)
 {
 	EnableClocks();
 }
+
+
 
 /***************************************************************************//**
  * @brief
@@ -297,9 +310,12 @@ void EnterEM3(void)
 	SetGPIO(MCULED2_PORT,MCULED2_PIN,0);
 	SetGPIO(MCULED3_PORT,MCULED3_PIN,0);
   // High and low frequency clocks are disabled in EM3.
+
   // ULFRCO is always running from EM0-EM3.
+
   // All unwanted oscillators are disabled in EM3.
 
+  // Enter EM3.
   EMU_EnterEM3(false);
 }
 
@@ -326,8 +342,12 @@ void EnterEM4(void)
 	SendEmpty(100);
 	send_RFDuino_command(CMD[CMD_SLEEP]);
 	SendEmpty(100);
-	// later:
-	//InitSpi or I2c
+
+
+  // High and low frequency clocks are disabled in EM4.
+
+  // All unwanted oscillators are disabled in EM4.
+
   // Enter EM4.
   EMU_EnterEM4();
 }
