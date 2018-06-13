@@ -31,8 +31,8 @@
 **************************************************/
 void InitRFDuino();
 
-void USART1_RX_IRQHandler(void);
-void USART1_TX_IRQHandler(void);
+void USART0_RX_IRQHandler(void);
+void USART0_TX_IRQHandler(void);
 
 uint16_t fix_overflow(uint16_t index);
 
@@ -55,7 +55,7 @@ void InitRFduinoUART();
 /**************************************************
  *  Global Defines
 **************************************************/
-#define USER_LOCATION 3 //This is where the USART is physically located
+#define USER_LOCATION 0 //This is where the USART is physically located
 
 #define  PRINT_BUFFER_SIZE     	512
 #define  RX_BUFFER_SIZE		  	100

@@ -16,6 +16,7 @@
 
 int main(void)
 {
+
   /* Chip errata */
   CHIP_Init();
   InitCMD();
@@ -35,19 +36,17 @@ int main(void)
   /* Infinite loop */
   while (1) {
 
-
-	 SetGPIO(MCULED1_PORT,MCULED1_PIN,1);
-	 SetGPIO(MCULED3_PORT,MCULED3_PIN,1);
-
+	 //SetGPIO(MCULED1_PORT,MCULED1_PIN,1);
+	 //SetGPIO(MCULED3_PORT,MCULED3_PIN,1);
 
 	   TimeoutChecker();
 
 
-	  if( (event >= 0) && (event < MAX_EVENTS) )
+	  if( (event >= 0) && (event < MAX_EVENTS) ){
 	 	    next_state = state_table[state][event]();
 	 	    state = next_state;
 	 	  }
 
 	    }
 
-
+}

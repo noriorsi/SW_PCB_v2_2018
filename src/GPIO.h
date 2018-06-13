@@ -51,10 +51,9 @@
 
 #define MAX_GPIO_COUNT 					37
 
-#define NUMBER_OF_SPI_PINS				4
 #define 	NUMBER_OF_RFDUINO_PINS		4
 #define 	NUMBER_OF_MCULED_PINS		3
-#define 	NUMBER_OF_ADC_PINS			2
+#define 	NUMBER_OF_ADC_PINS			5
 #define 	RX_PIN_INT_MASK				(1<<USART_RX_PIN)
 
 
@@ -132,14 +131,9 @@ GPIO_struct EveryGPIO[MAX_GPIO_COUNT]; //struct that stores every setup gpio
 
 //GPIO_struct Button1; //struct that stores 1 push button setup
 
-GPIO_struct SPI[NUMBER_OF_SPI_PINS];
+//GPIO_struct SPI[NUMBER_OF_SPI_PINS];
 GPIO_struct ADC[NUMBER_OF_ADC_PINS];
 GPIO_struct SI7021;
-GPIO_struct ADC_0;
-GPIO_struct ADC_1;
-GPIO_struct ADC_2;
-GPIO_struct ADC_3;
-GPIO_struct ADC_4;
 GPIO_struct RFduino[NUMBER_OF_RFDUINO_PINS];
 
 GPIO_struct MCULEDS[NUMBER_OF_MCULED_PINS];
@@ -154,6 +148,7 @@ void SetGPIO(GPIO_Port_TypeDef port, unsigned int pin, unsigned int data);
 unsigned GetGPIO(GPIO_Port_TypeDef port, unsigned int pin);
 void GPIOSetup(GPIO_struct gpio);
 void GPIO_Unified_IRQ(void);
+void GPIO_ODD_IRQHandler(void);
 void GPIO_EVEN_IRQHandler(void);
 unsigned StartMode();
 #endif /* SRC_GPIO_H_ */

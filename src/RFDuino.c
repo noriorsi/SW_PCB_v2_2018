@@ -29,7 +29,7 @@ static void InitUART(){
 	/* USART is a HFPERCLK peripheral. Enable HFPERCLK domain and USART1.
 	 * We also need to enable the clock for GPIO to configure pins. */
 	CMU_ClockEnable(cmuClock_HFPER, true);
-	CMU_ClockEnable(cmuClock_USART1, true);
+	CMU_ClockEnable(cmuClock_USART0, true);
 	CMU_ClockEnable(cmuClock_GPIO, true);
 
 
@@ -37,31 +37,31 @@ static void InitUART(){
 	USART_InitAsync_TypeDef initAsync = USART_INITASYNC_DEFAULT;
 	initAsync.baudrate = BAUD;
 
-	USART_InitAsync(USART1, &initAsync);
+	USART_InitAsync(USART0, &initAsync);
 
 
 
 	/* Enable I/O and set location */
-	USART1->ROUTE = USART_ROUTE_RXPEN | USART_ROUTE_TXPEN | (USER_LOCATION<<8);
+	USART0->ROUTE = USART_ROUTE_RXPEN | USART_ROUTE_TXPEN | (USER_LOCATION<<8);
 	/* Also enable CS and CLK pins if the USART is configured for synchronous mode.
 	 * Set GPIO mode. */
 
 	 /* To avoid false start, configure TX pin as initial high */
-	 GPIO_PinModeSet((GPIO_Port_TypeDef)AF_USART1_TX_PORT(USER_LOCATION), AF_USART1_TX_PIN(USER_LOCATION), gpioModePushPull, 1);
-	 GPIO_PinModeSet((GPIO_Port_TypeDef)AF_USART1_RX_PORT(USER_LOCATION), AF_USART1_RX_PIN(USER_LOCATION), gpioModeInput, 0);
+	 GPIO_PinModeSet((GPIO_Port_TypeDef)AF_USART0_TX_PORT(USER_LOCATION), AF_USART0_TX_PIN(USER_LOCATION), gpioModePushPull, 1);
+	 GPIO_PinModeSet((GPIO_Port_TypeDef)AF_USART0_RX_PORT(USER_LOCATION), AF_USART0_RX_PIN(USER_LOCATION), gpioModeInput, 0);
 	 /* Don't enable CTS/RTS hardware flow control pins in this example. */
 
-	  USART_IntClear(USART1, USART_IF_RXDATAV);
-	  USART_IntEnable(USART1, USART_IF_RXDATAV);
+	  USART_IntClear(USART0, USART_IF_RXDATAV);
+	  USART_IntEnable(USART0, USART_IF_RXDATAV);
 
-	  NVIC_ClearPendingIRQ(USART1_RX_IRQn);
-	  NVIC_EnableIRQ(USART1_RX_IRQn);
+	  NVIC_ClearPendingIRQ(USART0_RX_IRQn);
+	  NVIC_EnableIRQ(USART0_RX_IRQn);
 
-	  USART_IntClear(USART1, USART_IF_TXC);
-	  USART_IntEnable(USART1, USART_IF_TXC);
+	  USART_IntClear(USART0, USART_IF_TXC);
+	  USART_IntEnable(USART0, USART_IF_TXC);
 
-	  NVIC_ClearPendingIRQ(USART1_TX_IRQn);
-	  NVIC_EnableIRQ(USART1_TX_IRQn);
+	  NVIC_ClearPendingIRQ(USART0_TX_IRQn);
+	  NVIC_EnableIRQ(USART0_TX_IRQn);
 
 }
 
@@ -112,7 +112,7 @@ static void send(char * string){
       if (!buffer.now_printing)
       {
             buffer.now_printing = true;
-            USART_Tx(USART1, buffer.data[buffer.tail++]);
+            USART_Tx(USART0, buffer.data[buffer.tail++]);
             buffer.tail = fix_overflow(buffer.tail);
       }
       CORE_AtomicEnableIrq();
@@ -214,8 +214,8 @@ void InitRFDuino(){
 /*************************************************************
  * The interrupt handler for received packages.
  *************************************************************/
-void USART1_RX_IRQHandler(void){
-	char ch = USART1->RXDATA;
+void USART0_RX_IRQHandler(void){
+	char ch = USART0->RXDATA;
 
 	SetCommandChar(ch);
 
@@ -234,15 +234,15 @@ void USART1_RX_IRQHandler(void){
 /*************************************************************
  * The interrupt handler for sending packages.
  *************************************************************/
-void USART1_TX_IRQHandler(void){
-if (USART1->IF & USART_IF_TXC)
+void USART0_TX_IRQHandler(void){
+if (USART0->IF & USART_IF_TXC)
       {
             // This flag is not automatically cleared like RXDATAV
-            USART_IntClear(USART1, USART_IF_TXC);
+            USART_IntClear(USART0, USART_IF_TXC);
 
             if (buffer.tail != buffer.head)
             {
-                  USART_Tx(USART1, buffer.data[buffer.tail++]);
+                  USART_Tx(USART0, buffer.data[buffer.tail++]);
                   buffer.tail = fix_overflow(buffer.tail);
             }
             else
@@ -377,7 +377,7 @@ void RFDuino_GiveIT(){
 void SendRXBuffer(){
 	send_string("------------------\n");
 	for(int i=0; i<rx_buffer.index; ++i){
-		USART_Tx(USART1, rx_buffer.data[i]);
+		USART_Tx(USART0, rx_buffer.data[i]);
 	}
 	send_string("------------------\n");
 	Delay(1000);

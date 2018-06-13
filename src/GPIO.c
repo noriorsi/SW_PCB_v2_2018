@@ -94,8 +94,8 @@ static void InitADC_GPIO(){
 static void SetupInterrupt(){
 	  GPIO_IntConfig(USART_RX_PORT, USART_RX_PIN, true, false, true);
 	 //GPIO_IntConfig(MAX30100_INT1_PORT, MAX30100_INT1_PIN, true, false, true);
-	  NVIC_ClearPendingIRQ(GPIO_EVEN_IRQn);
-	  NVIC_EnableIRQ(GPIO_EVEN_IRQn);
+	  NVIC_ClearPendingIRQ(GPIO_ODD_IRQn);
+	  NVIC_EnableIRQ(GPIO_ODD_IRQn);
 
 }
  static void InitRFduino(){
@@ -158,11 +158,12 @@ void GPIOSetup(GPIO_struct gpio){
 void GPIO_Unified_IRQ(void){
 
 	uint32_t mask = 0;
-
+#ifndef LEDS_OFF
 	SetGPIO(MCULED1_PORT, MCULED1_PIN, 1);
+
 	for(int i=0; i<100; ++i); //a small delay only for a flash of a led
 	SetGPIO(MCULED1_PORT, MCULED1_PIN, 0);
-
+#endif
 	switch(getITpin()){
 		case USART_RX_PIN:{
 			event = RFDUINO_GPIO_IT_EVENT;
@@ -183,10 +184,16 @@ void GPIO_Unified_IRQ(void){
 /**************************************************************************//**
  * @brief GPIO Interrupt handler for odd pins.
  *****************************************************************************/
+void GPIO_ODD_IRQHandler(void)
+{
+  GPIO_Unified_IRQ();
+}
+
 void GPIO_EVEN_IRQHandler(void)
 {
   GPIO_Unified_IRQ();
 }
+
 
 /*************************************************
  * Returns if the button has been pushed

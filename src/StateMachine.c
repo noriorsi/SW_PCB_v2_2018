@@ -42,17 +42,14 @@ state_enum (*state_table[MAX_STATES][MAX_EVENTS])(void)={
 state_enum No_Event_Handler(void){
 	switch(state){
 		case IDLE_STATE:{
-			SetGPIO(MCULED1_PORT, MCULED1_PIN, 1);
-			Delay(500);
-			SetGPIO(MCULED1_PORT, MCULED1_PIN, 0);
-			Delay(500);
-			//EnterPowerSaving();
+
+			EnterPowerSaving();
 			break;
 		}
 		case MODE1_STATE:{
 			ContinousMeasurement_for5fsr();
-			GPIO_IntClear(RX_PIN_INT_MASK);									//enable RFDuino IT or else we won't be able to stop this state
-			GPIO_IntEnable(RX_PIN_INT_MASK);
+			//GPIO_IntClear(RX_PIN_INT_MASK);									//enable RFDuino IT or else we won't be able to stop this state
+			//GPIO_IntEnable(RX_PIN_INT_MASK);
 			//EnterEM3();
 
 									break;
@@ -70,11 +67,11 @@ state_enum No_Event_Handler(void){
 			//param_num_number = 9;
 			if(didElapseGivenSeconds(delay_between_measurement, entered_parametric_timestamp)){ //we need to check this here too else every RFduino IT leads here
 							entered_parametric_timestamp = getTimeStructRTC();
-							ContinousMeasurement_for5fsr();
+							//ContinousMeasurement_for5fsr();
 
 							//send_int(entered_parametric_timestamp.seconds);
 							//Measure(param_num_number, param_period_number); 				//measure and send
-							//Measure_multipleFSR(param_num_number, param_period_number);
+							Measure_multipleFSR(param_num_number, param_period_number);
 							GPIO_IntClear(RX_PIN_INT_MASK);									//enable RFDuino IT or else we won't be able to stop this state
 							GPIO_IntEnable(RX_PIN_INT_MASK);
 							EnterEM3();
@@ -111,6 +108,7 @@ state_enum No_Event_Handler(void){
 	return state; //return the same state
 
 }
+
 
 
 /*************************************************************
