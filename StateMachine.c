@@ -16,7 +16,7 @@ RTC_time_struct entered_parametric_timestamp = {0,0,0};
 //A 2 dimensional array of function pointers. The functions return state_enum type and have no parameters.
 state_enum (*state_table[MAX_STATES][MAX_EVENTS])(void)={
 
-		//NO_EVENT		           // STOP_EVENT		//StartM1_Event_Handler			//RFDUINO_GPIO_IT_EVENT			//RTC_IT_EVENT				//TIMEOUT_EVENT
+		//NO_EVENT		           // STOP_EVENT		//StartM2_Event_Handler			//RFDUINO_GPIO_IT_EVENT			//RTC_IT_EVENT				//TIMEOUT_EVENT
 
 	  { No_Event_Handler	,   Error_Event_Handler	,	StartM2_Event_Handler	,	RFduino_GPIO_IT_Event_Handler	,	No_Event_Handler		,	Error_Event_Handler},   //IDLE_STATE
 	  { No_Event_Handler	,   Stop_Event_Handler	,	StartM2_Event_Handler	,	RFduino_GPIO_IT_Event_Handler	,	RTC_IT_Event_Handler	,	Error_Event_Handler},   //MODE2_STATE

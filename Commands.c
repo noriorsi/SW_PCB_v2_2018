@@ -12,7 +12,7 @@ char* CMD[NUMBER_OF_COMMANDS];
 
 
 char param_period[MAX_PERIOD_DIGITS_MS+1] = {0};
-int param_period_number = 1000;
+int param_period_number = 255;
 char param_num[MAX_NUM_DIGITS+1] = {0};
 int param_num_number = 1;
 char PARAM[NUMBER_OF_PARAMS];
@@ -196,7 +196,7 @@ void SaveParam(char* data, int n){
 
 }
 
-/*
+
 void ResetParams(){
   for(int i=0; i<MAX_PERIOD_DIGITS_MS+1; ++i){
     param_period[i] = 0;
@@ -213,4 +213,4 @@ void ResetParams(){
   param_num_number = 0;
 
 }
-*/
+

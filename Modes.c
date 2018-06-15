@@ -194,15 +194,15 @@ void Measure_multipleFSR (int n, int period){
 
 					//WriteToFlash((uint32_t)time_ms);
 					//WriteToFlash((uint32_t) BatteryVoltage);
-					//Delay(1);
-					Delay(100);
+					Delay(2);
+					//Delay(100);
 				}
-
+		  //  WriteToFlash((uint32_t)time_ms);
 			UpdateLastDataInFlash();
 
 			RFDuino_GiveIT();
 			InitRFduinoUART();
-			//SendEmpty(5);
+			SendEmpty(5);
 
 			//send_string("------\n");
 

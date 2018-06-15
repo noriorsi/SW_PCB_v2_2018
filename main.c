@@ -19,15 +19,17 @@ int main(void)
 
   /* Chip errata */
   CHIP_Init();
-  InitCMD();
   InitRFDuino();
-  InitGPIO();
-  InitADC();
+  InitCMD();
   InitSysTick();
+  InitGPIO();
   InitSI7021();
+  InitADC();
+
   InitEmulatedEEPROM();
   InitRTC();
   InitFlash();
+
   InitRFduinoUART();
   EnterPowerSaving();
 
